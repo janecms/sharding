@@ -28,8 +28,7 @@
 ## 4.swith 是否能作用在 byte 上，是否能作用在 long 上，是否能作用在 strng 上。
 - Java SE 7 规定switch表达式类型必须是char，byte，short，int，Character，Byte，Short，Integer，String或枚举类型;
 - Java SE 6 规定switch表达式类型必须是char，byte，short，int，Character，Byte，Short，Integer或枚举类型，否则会发生编译时错误
-## 5. 存在表 T（a,b,c,d），要根据字段 c 排序后取第 21-30 条记录显示，请写出 sql 文。
-## 6. 查出 user 表中 username 相同的记录，显示 username 和重复的次数，给出 sql。
+
 ## 7.float 是多少位的。
 - float的范围是由指数的位数来决定的。float的指数位有8位; float的范围为-2^128 ~ +2^128
 - float的精度是由尾数的位数来决定的,浮点数在内存中是按科学计数法来存储的，其整数部分始终是一个隐含着的“1”，
@@ -124,7 +123,6 @@ public class T {
 
 如图,HashMap 底层就是一个数组结构，数组中的每一项是一个链表(Entity),称为“桶”。
 特点
-
 - 1)HashMap 是基于哈希表的 Map 接口的非同步实现。此实现提供所有可选的映射操作，并允许使用 null 值和 null 键。
 - 2)不保证映射的顺序。
 - 3)通过hash值，决定对象在散列表中位置
@@ -145,8 +143,50 @@ public class T {
 - 3)控制器（Controller）起到不同层面间的组织作用，用于控制应用程序的流程。它处理事件并作出响应。“事件”包括用户的行为和数据 Model 上的改变。
 
 ## 12. 什么是 Java 优先级队列。
+PriorityQueue类在Java1.5中引入。PriorityQueue是基于优先堆的一个无界队列，这个优先队列中的元素可以默认自然排序或者通过提供的Comparator（比较器）在队列实例化的时排序。
+具体取决于使用哪个构造函数。优先级队列不允许空元素。依靠自然排序的优先级队列也不允许插入不可比较的对象（否则可能导致ClassCastException）。
+优先队列的头是基于自然排序或者Comparator排序的最小元素。如果有多个对象拥有同样的排序，那么就可能随机地取其中任意一个。当我们获取队列时，返回队列的头对象。
+PriorityQueue是非线程安全的，所以Java提供了PriorityBlockingQueue
 ## 13. 简述一下 spring，都用过 spring 的什么？
+Spring Framework 是一个开源的Java／Java EE全功能栈（full-stack）的应用程序框架，以Apache许可证形式发布，也有.NET平台上的移植版本.
+Spring Framework提供了一个简易的开发方式，这种开发方式，将避免那些可能致使底层代码变得繁杂混乱的大量的属性文件和帮助类。
+常见的有:spring-aop,spring-jdbc,spring-tx,spring-jms,spring-data,spring-data-jpa,spring-data-redis,spring-orm,springmvc,spring-security,springboot,spring-batch
 ## 14. 说一下数据库的索引。数据库隔离级别。
+### 14.1数据库索引
+索引是对数据库表中的一列或多列的值，进行排序的一种结构 ，使用索引可以快速访问数据库表中的特定信息，是加快数据库查询的技术。
+索引的优缺点
+优点
+- 1.索引可以避免全表扫描；
+- 2.大大提高数据检索的速度
+缺点
+- 1.需要耗费时间的，这种时间会随着数据量的增加而增加
+- 2.当表中的数据进行增加、删除和修改的时候，索引也要动态地维护，这样就降低了数据的维护速度
+索引类型
+- 1.normal：表示普通索引
+- 2.unique：表示唯一的，不允许重复的索引。
+- 3.full textl: 表示 全文搜索的索引。 
+索引结构
+- 1.Hash索引:哈希索引只有Memory, NDB两种引擎支持，Memory引擎默认支持哈希索引，如果多个hash值相同，出现哈希碰撞，那么索引以链表方式存储。
+	哈希索引就是采用一定的哈希算法，把键值换算成新的哈希值，检索时不需要类似B+树那样从根节点到叶子节点逐级查找，只需一次哈希算法即可立刻定位到相应的位置，速度非常快。
+- 2.B-Tree索引:最为频繁的索引类型，除了 Archive 存储引擎之外的其他所有的存储引擎都支持 B-Tree 索引
+- 3.oracle有位图索引。适用于选择基数小的列。
+
+### 14.2数据库隔离级别
+
+	事务隔离（英语：Transaction Isolation）定义了数据库系统中一个操作的结果在何时以何种方式对其他并发操作可见。隔离是事务ACID（原子性、一致性性、隔离性、持久性）四大属性之一。
+- 1.未提交读（READ UNCOMMITTED）是最低的隔离级别。允许“脏读”（dirty reads），事务可以看到其他事务“尚未提交”的修改。
+- 2.提交读（READ COMMITTED） 基于锁机制并发控制的DBMS需要对选定对象的写锁一直保持到事务结束，但是读锁在SELECT操作完成后马上释放。“不可重复读”现象可能会发生。
+- 3.可重复读（REPEATABLE READS）基于锁机制并发控制的DBMS需要对选定对象的读锁（read locks）和写锁（write locks）一直保持到事务结束，但不要求“范围锁”，因此可能会发生“幻影读”
+- 4.可序列化 是最低的隔离级别。允许“脏读”（dirty reads），事务可以看到其他事务“尚未提交”的修改。要求在选定对象上的读锁和写锁保持直到事务结束后才能释放。
+	在SELECT 的查询中使用一个“WHERE”子句来描述一个范围时应该获得一个“范围锁”（range-locks）。这种机制可以避免“幻影读”（phantom reads）现象
+
+隔离级别vs 锁持续时间
+隔离级别l |	写操作|读操作|范围操作 (...where...)|
+| ------- |:-----:| ----:|----------------：|
+|未提交读 |	S |	S |	S |
+提交读	  | C  |S |	S |
+可重复读  |、C | C |S |
+可序列化  |  C | C	|C|
 ## 15.statement 与 PreparedStatement 的区别，如何防止 sql 注入。
 ## 16. 简述一下 restful，设计一个 url 要注意什么。
 ## 17. 如何进行单元测试的。
