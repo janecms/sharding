@@ -111,9 +111,39 @@ public class T {
 - 1)一共启动5个线程，2个加线程,2个减线程，1个监控线程。其中监控线程主要用来检查线程安全性。
 - 2)使用Runnable接口，实现对象共享；使用AtomicInteger,AtomicLong自身的线程安全性。
 - 3)使用synchronized块，按共享变量J为单位加锁，保证组合变量线程安全性。
+
 ## 9.a.hashCode（）有什么作用？与 a.equals（b）有什么关系？
+ 
+- 1)hashCode() 的作用是获取哈希码，也称为散列码；它实际上是返回一个int整数。这个哈希码的作用是确定该对象在散列表(HashMap，Hashtable，HashSet)中的索引位置。
+- 2)按场景区分：散列表数据结构中：对象hashCode()相等，不一定相等;两个对象相等，那么它们的hashCode()值一定相同;反之：两者没有一点关系。
+- 3）Object.java提供equals方法的默认实现,"比较“p1和p2是否是同一个对象”,一般情况下，要重写方法。
+- 4） hashcode方法是native方法，满足规则（对象equals相等，hashCode值一定相同;hashCode值相同,对象不一定相等,但是，为不等对象生成不同的整数结果可能会提高哈希表的性能)
+
 ## 10. 写出 hashMap 的数据结构。
+![hashmap1](http://wiki.jikexueyuan.com/project/java-collection/images/hashmap1.jpg)
+
+如图,HashMap 底层就是一个数组结构，数组中的每一项是一个链表(Entity),称为“桶”。
+特点
+
+- 1)HashMap 是基于哈希表的 Map 接口的非同步实现。此实现提供所有可选的映射操作，并允许使用 null 值和 null 键。
+- 2)不保证映射的顺序。
+- 3)通过hash值，决定对象在散列表中位置
+- 4)HashMap有两个参数影响其性能：初始容量和加载因子。默认初始容量是16，加载因子是0.75。容量是哈希表中桶(Entry数组)的数量，
+	初始容量只是哈希表在创建时的容量。加载因子是哈希表在其容量自动增加之前可以达到多满的一种尺度。
+	当哈希表中的条目数超出了加载因子与当前容量的乘积时，通过调用 rehash 方法将容量翻倍。
+	
 ## 11. 简述 MVC 设计模式。
+
+	![MVC-Process.svg](https://zh.wikipedia.org/wiki/File:MVC-Process.svg)
+	将应用程序划分为三种组件，模型 - 视图 - 控制器（MVC）设计定义它们之间的相互作用。
+- 1)模型（Model） 用于封装与应用程序的业务逻辑相关的数据以及对数据的处理方法。“ Model ”有对数据直接访问的权力，例如对数据库的访问。
+	“Model”不依赖“View”和“Controller”，也就是说， Model 不关心它会被如何显示或是如何被操作。但是 Model 中数据的变化一般会通过一种刷新机制被公布。
+	为了实现这种机制，那些用于监视此 Model 的 View 必须事先在此 Model 上注册，从而，View 可以了解在数据 Model 上发生的改变。
+	如(DTO, POCO, POJO 等,Repository Pattern ,ORM)
+- 2)视图（View）能够实现数据有目的的显示（理论上，这不是必需的）。在 View 中一般没有程序上的逻辑。为了实现 View 上的刷新功能，如JSP
+	View 需要访问它监视的数据模型（Model），因此应该事先在被它监视的数据那里注册。如Spring 的 DispatcherServlet。
+- 3)控制器（Controller）起到不同层面间的组织作用，用于控制应用程序的流程。它处理事件并作出响应。“事件”包括用户的行为和数据 Model 上的改变。
+
 ## 12. 什么是 Java 优先级队列。
 ## 13. 简述一下 spring，都用过 spring 的什么？
 ## 14. 说一下数据库的索引。数据库隔离级别。
