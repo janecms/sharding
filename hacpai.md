@@ -191,8 +191,12 @@ Spring Framework提供了一个简易的开发方式，这种开发方式，将�
 |  可重复读 	|、 C 		|    C 		|   S 						|
 |  可序列化  	|   C 		|    C		|   C						|
 
-
-
+不同的DBMS默认隔离级别也不同。大多数据库允许用户设置隔离级别
+```
+transaction-isolation = {READ-UNCOMMITTED | READ-COMMITTED | REPEATABLE-READ | SERIALIZABLE}
+oracle默认级别为：READ-COMMITTED
+InnoDB默认级别为：REPEATABLE-READ
+```
 ## 15.statement 与 PreparedStatement 的区别，如何防止 sql 注入。
 ## 16. 简述一下 restful，设计一个 url 要注意什么。
 ## 17. 如何进行单元测试的。
