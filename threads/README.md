@@ -158,20 +158,20 @@ Future模式
 ---
 ## NIO
 
-–NIO是基于块（Block）的，它以块为基本单位处理数据
-–为所有的原始类型提供（Buffer）缓存支持
-–增加通道（Channel）对象，作为新的原始I/O抽象
-–支持锁和内存映射文件的文件访问接口
-–提供了基于Selector的异步网络I/O	
+– NIO是基于块（Block）的，它以块为基本单位处理数据
+– 为所有的原始类型提供（Buffer）缓存支持
+– 增加通道（Channel）对象，作为新的原始I/O抽象
+– 支持锁和内存映射文件的文件访问接口
+– 提供了基于Selector的异步网络I/O	
 
 Buffer中有3个重要的参数：位置（position）、容量（capactiy）和上限（limit）
 
 ```
-publicfinalBufferrewind()
+public final Bufferrewind()
 	将position置零，并清除标志位（mark）
-publicfinalBufferclear()
+public final Bufferclear()
 		将position置零，同时将limit设置为capacity的大小，并清除了标志mark
-publicfinalBufferflip()
+public final Bufferflip()
 	先将limit设置到position所在位置，然后将position置零，并清除标志位mark;通常在读写转换时使用
 ```	
 
@@ -186,24 +186,24 @@ AIO
 
 ### 锁优化的思路和方法
 
--减少锁持有时间
--减小锁粒度
+- 减少锁持有时间
+- 减小锁粒度
 	-	将大对象，拆成小对象，大大增加并行度，降低锁竞争
 	-偏向锁，轻量级锁成功率提高
 	-ConcurrentHashMap（若干个SegmentSegment中维护HashEntry）
 	-HashMap的同步实现
--锁分离
-	-根据功能进行锁分离
-	-ReadWriteLock
-	-读写分离思想可以延伸，只要操作互不影响，锁就可以分离。LinkedBlockingQueue
--锁粗化
+- 锁分离
+	- 根据功能进行锁分离
+	- ReadWriteLock
+	- 读写分离思想可以延伸，只要操作互不影响，锁就可以分离。LinkedBlockingQueue
+- 锁粗化
 	
 	通常情况下，为了保证多线程间的有效并发，会要求每个线程持有锁的时间尽量短，即在使用完
 	公共资源后，应该立即释放锁。只有这样，等待在这个锁上的其他线程才能尽早的获得资源执行
 	任务。但是，凡事都有一个度，如果对同一个锁不停的进行请求、同步和释放，其本身也会消耗
 	系统宝贵的资源，反而不利于性能的优化
 	
--锁消除
+- 锁消除
 	在即时编译器时，如果发现不可能被共享的对象，则可以消除这些对象的锁操作（-XX:+EliminateLocks）
 
 ###虚拟机内的锁优化
@@ -221,7 +221,7 @@ AIO
 	–GC标记
 	–偏向锁线程ID	
 	
-####偏向锁
+#### 偏向锁
 
 -大部分情况是没有竞争的，所以可以通过偏向来提高性能
 -所谓的偏向，就是偏心，即锁会偏向于当前已经占有锁的线程
@@ -231,7 +231,7 @@ AIO
 --XX:+UseBiasedLocking默认启用
 -在竞争激烈的场合，偏向锁会增加系统负担
 
-####轻量级锁
+#### 轻量级锁
 
 - 如果对象没有被锁定
 	– 将对象头的Mark指针保存到锁对象中
@@ -240,7 +240,7 @@ AIO
 -在没有锁竞争的前提下，减少传统锁使用OS互斥量产生的性能损耗
 -在竞争激烈时，轻量级锁会多做很多额外操作，导致性能下降	
 
-####自旋锁
+#### 自旋锁
 当竞争存在时，如果线程可以很快获得锁，那么可以不在OS层挂起线程，让线程做几个空操作（自旋）
 -JDK1.6中-XX:+UseSpinning开启
 -JDK1.7中，去掉此参数，改为内置实现
