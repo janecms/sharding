@@ -1,8 +1,8 @@
-##并发基础
+## 并发基础
 -什么是线程?
 	–线程是进程内的执行单元
 
-###线程的基本操作
+### 线程的基本操作
 
 -	终止线程
 	– Thread.stop()不推荐使用。它会释放所有monitor
@@ -45,16 +45,15 @@ publicfinalstaticintMAX_PRIORITY=10;
 -Object.wait()Obejct.notify()
 
 ---
-##内存模型&线程安全
--原子性
+## 内存模型&线程安全
+- 原子性
 	是指一个操作是不可中断的。即使是在多个线程一起执行的时候，一个操作一旦开始，就不会被其它线程干扰。
--有序性
+- 有序性
 	在并发时，程序的执行可能就会出现乱序
--可见性	
+- 可见性	
 	指当一个线程修改了某一个共享变量的值，其他线程是否能够立即知道这个修改
 	-译器优化
 	–硬件优化（如写吸收，批操作）
--可见性
 	[聊聊并发（一）——深入分析Volatile的实现原理](http://www.infoq.com/cn/articles/ftf-java-volatile)
 
 **Happen-Before规则**
@@ -68,7 +67,7 @@ publicfinalstaticintMAX_PRIORITY=10;
 -对象的构造函数执行结束先于finalize()方法
 
 **无锁类的原理**
--1.1.CAS
+- 1.1.CAS
 	CAS算法的过程是这样：它包含3个参数CAS(V,E,N)。V表示要更新的变量，E表示预期值，N表示新值。仅当V
 	值等于E值时，才会将V的值设为N，如果V值和E值不同，则说明已经有其他线程做了更新，则当前线程什么
 	都不做。最后，CAS返回当前V的真实值。CAS操作是抱着乐观的态度进行的，它总是认为自己可以成功完成
@@ -79,7 +78,7 @@ publicfinalstaticintMAX_PRIORITY=10;
 	-AtomicStampedReference解决了ABA问题
 
 **各种同步控制工具**
--1.1.ReentrantLock
+- 1.1.ReentrantLock
 	-1.1.1.可重入
 	-1.1.2.可中断lockInterruptibly()
 	-1.1.3.可限时	
@@ -90,7 +89,7 @@ publicfinalstaticintMAX_PRIORITY=10;
 		publicReentrantLock(booleanfair)
 		publicstaticReentrantLockfairLock=newReentrantLock(true);
 	```
--1.2.Condition	
+- 1.2.Condition	
 ```
 voidawait()throwsInterruptedException;
 voidawaitUninterruptibly();
@@ -107,7 +106,7 @@ voidsignalAll();
 	singal()方法用于唤醒一个在等待中的线程。相对的singalAll()方法会唤醒所有在等待中的线程。这和Obej
 	ct.notify()方法很类似。
 
--1.3.Semaphore
+- 1.3.Semaphore
 	共享锁;运行多个线程同时临界区
 
 -	1.4.ReadWriteLock
@@ -116,9 +115,9 @@ voidsignalAll();
 		-读-写互斥：读阻塞写，写也会阻塞读。
 		-写-写互斥：写写阻塞。
 
--1.5.CountDownLatch:倒数计时器
--1.6.CyclicBarrier:循环栅栏计数器可以反复使用。
--1.7.LockSupport:提供线程阻塞原语
+- 1.5.CountDownLatch:倒数计时器
+- 1.6.CyclicBarrier:循环栅栏计数器可以反复使用。
+- 1.7.LockSupport:提供线程阻塞原语
 ```
 LockSupport.park();
 LockSupport.unpark(t1);
@@ -130,24 +129,24 @@ LockSupport.unpark(t1);
 **
 
 -----
-###1.3.1.线程池的种类
+### 1.3.1.线程池的种类
 -newFixedThreadPool
 -newSingleThreadExecutor
 -newCachedThreadPool
 -newScheduledThreadPool
 
-###2.扩展和增强线程池
+### 2.扩展和增强线程池
 -	2.1.回调接口
 		-beforeExecute
 		-afterExecute
 		-terminated
 -	2.2.拒绝策略
 -	2.3.自定义ThreadFactory		
-##4.ForkJoin
+## 4.ForkJoin
 
--4.2.1.RecursiveAction
+- 4.2.1.RecursiveAction
 	无返回值
--4.2.2.RecursiveTask
+- 4.2.2.RecursiveTask
 	有返回值
 
 	**工作窃取**
@@ -157,7 +156,7 @@ Future模式
 
 
 ---
-##NIO
+## NIO
 
 –NIO是基于块（Block）的，它以块为基本单位处理数据
 –为所有的原始类型提供（Buffer）缓存支持
@@ -183,9 +182,9 @@ AIO
 
 ---
 
-##锁的优化
+## 锁的优化
 
-###锁优化的思路和方法
+### 锁优化的思路和方法
 
 -减少锁持有时间
 -减小锁粒度
