@@ -536,5 +536,5 @@ hystrix的高阶知识
 - 9、hystrix的metric高阶配置
 - 10、基于hystrix dashboard的可视化分布式系统监控
 - 11、生产环境中的hystrix工程运维经验
-
+链接: https://pan.baidu.com/s/1c1MJGac 密码: wp2b
 [基于hystrix的高可用电商详情页缓存服务](http://www.roncoo.com/course/view/b181d1862c68461c81298b8c9222922e)
