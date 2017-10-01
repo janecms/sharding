@@ -12,11 +12,10 @@ publicvoidThread.interrupt()//中断线程
 publicbooleanThread.isInterrupted()//判断是否被中断
 publicstaticbooleanThread.interrupted()//判断是否被中断，并清除当前中断状态
 ```
--挂起（suspend）和继续执行（resume）线程
-	–suspend()不会释放锁
-	-如果加锁发生在resume()之前，则死锁发生???
-
--等待线程结束（join）和谦让(yeild)
+	挂起（suspend）和继续执行（resume）线程
+	suspend()不会释放锁
+	如果加锁发生在resume()之前，则死锁发生???
+	等待线程结束（join）和谦让(yeild)
 
 ```
 publicfinalvoidjoin()throwsInterruptedException
