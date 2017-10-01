@@ -73,7 +73,7 @@ Ribbon工作时分为两步：
 例如轮询round robin、随机Random、根据响应时间加权等
 
 
-API 网关
+## API 网关
 
 [「Chris Richardson 微服务系列」使用 API 网关构建微服务](http://blog.daocloud.io/microservices-2/)
 
