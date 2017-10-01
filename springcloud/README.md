@@ -57,3 +57,24 @@ Eureka Server之间将会通过复制的方式完成数据的同步。（详见E
 Eureka还提供了客户端缓存的机制，即使所有的Eureka Server都挂掉，客户端依然可以利用缓存中的信息消费其他服务的API。
  
 综上，Eureka通过心跳检测、健康检查、客户端缓存等机制，确保了系统的高可用性、灵活性和可伸缩性。
+
+---
+## Ribbon是什么
+Ribbon是Netflix发布的云中间层服务开源项目，其主要功能是提供客户端侧负载均衡算法。
+Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，Ribbon是一个客户端负载均衡器，
+我们可以在配置文件中列出Load Balancer后面所有的机器，Ribbon会自动的帮助你基于某种规则（如简单轮询，随机连接等）
+去连接这些机器，我们也很容易使用Ribbon实现自定义的负载均衡算法。
+
+![ribbon](ribbon.png)
+
+Ribbon工作时分为两步：
+- 第一步先选择 Eureka Server, 它优先选择在同一个Zone且负载较少的Server；
+- 第二步再根据用户指定的策略，在从Server取到的服务注册列表中选择一个地址。其中Ribbon提供了多种策略，
+例如轮询round robin、随机Random、根据响应时间加权等
+
+
+API 网关
+
+[「Chris Richardson 微服务系列」使用 API 网关构建微服务](http://blog.daocloud.io/microservices-2/)
+
+Zuul API Gateway
