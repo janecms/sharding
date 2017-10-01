@@ -464,3 +464,77 @@ HystrixCommandProperties.Setter()
                         .withCircuitBreakerSleepWindowInMilliseconds(3000)
 ```
 
+---
+
+** Hystrix选择用线程池机制来进行资源隔离，要面对的场景如下：**
+
+- （1）每个服务都会调用几十个后端依赖服务，那些后端依赖服务通常是由很多不同的团队开发的
+- （2）每个后端依赖服务都会提供它自己的client调用库，比如说用thrift的话，就会提供对应的thrift依赖
+- （3）client调用库随时会变更
+- （4）client调用库随时可能会增加新的网络请求的逻辑
+- （5）client调用库可能会包含诸如自动重试，数据解析，内存中缓存等逻辑
+- （6）client调用库一般都对调用者来说是个黑盒，包括实现细节，网络访问，默认配置，等等
+- （7）在真实的生产环境中，经常会出现调用者，突然间惊讶的发现，client调用库发生了某些变化
+- （8）即使client调用库没有改变，依赖服务本身可能有会发生逻辑上的变化
+- （9）有些依赖的client调用库可能还会拉取其他的依赖库，而且可能那些依赖库配置的不正确
+- （10）大多数网络请求都是同步调用的
+- （11）调用失败和延迟，也有可能会发生在client调用库本身的代码中，不一定就是发生在网络请求中
+
+
+** 线程池机制的优点如下：**
+
+- （1）任何一个依赖服务都可以被隔离在自己的线程池内，即使自己的线程池资源填满了，也不会影响任何其他的服务调用
+- （2）服务可以随时引入一个新的依赖服务，因为即使这个新的依赖服务有问题，也不会影响其他任何服务的调用
+- （3）当一个故障的依赖服务重新变好的时候，可以通过清理掉线程池，瞬间恢复该服务的调用，而如果是tomcat线程池被占满，再恢复就很麻烦
+- （4）如果一个client调用库配置有问题，线程池的健康状况随时会报告，比如成功/失败/拒绝/超时的次数统计，然后可以近实时热修改依赖服务的调用配置，而不用停机
+- （5）如果一个服务本身发生了修改，需要重新调整配置，此时线程池的健康状况也可以随时发现，比如成功/失败/拒绝/超时的次数统计，然后可以近实时热修改依赖服务的调用配置，而不用停机
+- （6）基于线程池的异步本质，可以在同步的调用之上，构建一层异步调用层
+
+** 简单来说，最大的好处，就是资源隔离，确保说，任何一个依赖服务故障，不会拖垮当前的这个服务**
+
+## 线程池机制的缺点：
+
+-（1）线程池机制最大的缺点就是增加了cpu的开销
+		除了tomcat本身的调用线程之外，还有hystrix自己管理的线程池
+-（2）每个command的执行都依托一个独立的线程，会进行排队，调度，还有上下文切换
+-（3）Hystrix官方自己做了一个多线程异步带来的额外开销，通过对比多线程异步调用+同步调用得出，
+	  Netflix API每天通过hystrix执行10亿次调用，每个服务实例有40个以上的线程池，每个线程池有10个左右的线程
+-（4）最后发现说，用hystrix的额外开销，就是给请求带来了3ms左右的延时，最多延时在10ms以内，相比于可用性和稳定性的提升，这是可以接受的
+
+*** sempahore技术可以用来限流和削峰，但是不能用来对调研延迟的服务进行timeout和隔离 ***
+
+*** 超时处理**
+
+-（1）execution.isolation.thread.timeoutInMilliseconds
+
+手动设置timeout时长，一个command运行超出这个时间，就被认为是timeout，然后将hystrix command标识为timeout，同时执行fallback降级逻辑
+
+默认是1000，也就是1000毫秒
+```
+HystrixCommandProperties.Setter()
+   .withExecutionTimeoutInMilliseconds(int value)
+```
+-（2）execution.timeout.enabled
+
+控制是否要打开timeout机制，默认是true
+```
+HystrixCommandProperties.Setter()
+   .withExecutionTimeoutEnabled(boolean value)
+```   
+
+
+hystrix的高阶知识
+
+- 1、request collapser，请求合并技术
+- 2、fail-fast和fail-slient，高阶容错模式
+- 3、static fallback和stubbed fallback，高阶降级模式
+- 4、嵌套command实现的发送网络请求的降级模式
+- 5、基于facade command的多级降级模式
+- 6、request cache的手动清理
+- 7、生产环境中的线程池大小以及timeout配置优化经验
+- 8、线程池的自动化动态扩容与缩容技术
+- 9、hystrix的metric高阶配置
+- 10、基于hystrix dashboard的可视化分布式系统监控
+- 11、生产环境中的hystrix工程运维经验
+
+[基于hystrix的高可用电商详情页缓存服务](http://www.roncoo.com/course/view/b181d1862c68461c81298b8c9222922e)
