@@ -32,12 +32,13 @@
 	- 4. 自我修复（断路器状态的切换）
 
 ##  服务发现组件：Eureka
-	Eureka是Netflix开发的服务发现框架，本身是一个基于REST的服务，主要用于定位运行在AWS域中的中间层服务，以达到负载均衡和中间层服务故障转移的目的。
+	Eureka是Netflix开发的服务发现框架，本身是一个基于REST的服务，主要用于定位运行在AWS域中的中间层服务，
+	以达到负载均衡和中间层服务故障转移的目的。
 	Spring Cloud将它集成在其子项目spring-cloud-netflix中，以实现Spring Cloud的服务发现功能。
 Region和Zone的关系 
 	![region.jpeg](region.jpeg)
 	
-	![eureka](eureka.jpeg)
+	![eureka.jpeg](eureka.jpeg)
 上图是来自Eureka官方的架构图，大致描述了Eureka集群的工作过程。由于图比较复杂，可能比较难看懂，这边用通俗易懂的语言翻译一下：
 - Application Service 就相当于本书中的服务提供者（用户微服务），Application Client就相当于本书中的服务消费者（电影微服务）；
 - Make Remote Call，可以简单理解为调用RESTful的接口；
